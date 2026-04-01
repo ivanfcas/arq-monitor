@@ -1,0 +1,33 @@
+name: ARQ Stock Monitor
+
+on:
+  schedule:
+    # Corre cada 30 min, lunes a viernes, entre 9:30 y 16:00 ET
+    # (equivale a 14:30 - 21:00 COT / UTC-5)
+    - cron: "0,30 14-20 * * 1-5"
+    - cron: "0 21 * * 1-5"
+  workflow_dispatch:  # permite ejecutarlo manualmente desde GitHub
+
+jobs:
+  monitorear:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Ejecutar monitor
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python monitor.py
