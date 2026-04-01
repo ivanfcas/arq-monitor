@@ -1,5 +1,5 @@
 """
-ARQ Stock Monitor - Ivan Ecopetrol
+ARQ Stock Monitor - Ivan Caseres
 Monitorea ETFs y acciones con señales de compra corto/largo plazo.
 Envía alertas por Telegram cuando se detecta una oportunidad.
 """
@@ -11,6 +11,8 @@ import yfinance as yf
 import pandas as pd
 from datetime import datetime, time
 import pytz
+import time
+import random
 
 # ─────────────────────────────────────────────
 #  CONFIGURACIÓN — edita esta sección
@@ -57,7 +59,16 @@ def calcular_rsi(serie: pd.Series, periodos: int = 14) -> float:
 def analizar(ticker: str) -> dict | None:
     """Descarga datos y calcula indicadores para un ticker."""
     try:
-        datos = yf.download(ticker, period="1y", interval="1d", progress=False, auto_adjust=True)
+        # Pausa aleatoria para evitar rate limit
+        time.sleep(random.uniform(2, 4))
+        
+        datos = yf.download(
+            ticker, 
+            period="1y", 
+            interval="1d", 
+            progress=False, 
+            auto_adjust=True,
+        )
         if datos.empty or len(datos) < 60:
             return None
 
