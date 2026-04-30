@@ -2,9 +2,15 @@ name: ARQ Stock Monitor
 
 on:
   schedule:
-    # Corre cada 10 min, lunes a viernes, entre 9:30 y 16:00 ET
-    # (equivale a 14:30 - 21:00 COT / UTC-5)
+    # ⏱ Corre cada 10 minutos
+    # 📅 Lunes a viernes
+    # 🌎 Hora en UTC (GitHub Actions)
+    # 🇨🇴 Equivalente Colombia: 8:00 AM – 3:00 PM
+    # 🟡 Incluye pre-market (8:00–8:30 AM)
     - cron: "*/10 13-20 * * 1-5"
+    # 🔥 Ejecución exacta en la APERTURA del mercado
+    # 🕒 13:30 UTC = 8:30 AM Colombia
+    # 💰 Momento más importante para trading intradía
     - cron: "30 13 * * 1-5"
   workflow_dispatch: # permite ejecutarlo manualmente desde GitHub
 
