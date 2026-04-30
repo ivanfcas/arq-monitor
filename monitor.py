@@ -143,10 +143,7 @@ def main():
         datos = analizar(ticker)
         if datos:
             resultados.append({"datos": datos, "senales": evaluar_senales(datos)})
-    if any(r["senales"] for r in resultados):
-        enviar_telegram(formatear_mensaje(resultados))
-    else:
-        print("[INFO] Sin señales — no se envía mensaje.")
+    enviar_telegram(formatear_mensaje(resultados))
 
 
 if __name__ == "__main__":
