@@ -1,38 +1,28 @@
-name: ARQ Stock Monitor
+name: ARQ Stock Monitor PRO
 
 on:
   schedule:
-    # ⏱ Corre cada 10 minutos
-    # 📅 Lunes a viernes
-    # 🌎 Hora en UTC (GitHub Actions)
-    # 🇨🇴 Equivalente Colombia: 8:00 AM – 3:00 PM
-    # 🟡 Incluye pre-market (8:00–8:30 AM)
-    - cron: "*/10 13-20 * * 1-5"
-    # 🔥 Ejecución exacta en la APERTURA del mercado
-    # 🕒 13:30 UTC = 8:30 AM Colombia
-    # 💰 Momento más importante para trading intradía
-    - cron: "30 13 * * 1-5"
-  workflow_dispatch: # permite ejecutarlo manualmente desde GitHub
+    # Cada 15 minutos (menos rate limit)
+    - cron: "*/15 14-20 * * 1-5"
+  workflow_dispatch:
 
 jobs:
   monitorear:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
 
     steps:
-      - name: Checkout código
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configurar Python
+      - name: Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          cache: "pip"
 
       - name: Instalar dependencias
-        run: pip install -r requirements.txt
+        run: pip install yfinance pandas pytz requests
 
-      - name: Ejecutar monitor
+      - name: Ejecutar bot
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
