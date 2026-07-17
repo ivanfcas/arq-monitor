@@ -1,28 +1,30 @@
-name: ARQ Stock Monitor PRO
+name: ARQ Monitor - Cada Hora
 
 on:
   schedule:
-    # Cada 15 minutos (menos rate limit)
-    - cron: "*/15 14-20 * * 1-5"
-  workflow_dispatch:
+    # Se ejecuta todos los días a las 0, 1, 2... 23 horas (UTC)
+    # UTC - 5 = Hora Colombia/Perú. Si son las 10:00 AM en Colombia, son las 15:00 UTC.
+    # Ajusta los horarios según tu zona (0 * * * 1-5 = cada hora de lunes a viernes UTC)
+    - cron: "0 * * * 1-5" # Cada hora, de Lunes a Viernes
+  workflow_dispatch: # Esto te permite lanzarlo manualmente desde la pestaña Actions
 
 jobs:
-  monitorear:
+  monitor:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repositorio
         uses: actions/checkout@v4
 
-      - name: Python
+      - name: Instalar Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.10"
 
       - name: Instalar dependencias
-        run: pip install yfinance pandas pytz requests
+        run: pip install -r requirements.txt
 
-      - name: Ejecutar bot
+      - name: Ejecutar Monitor
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
